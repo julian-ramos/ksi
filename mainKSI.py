@@ -1,3 +1,5 @@
+import miniQueue as mini
+import depth as dp
 import sys
 import pygame
 from pygame.locals import *
@@ -5,6 +7,14 @@ import server as Server
 import subprocess
 import globalVars as glob
 import threading
+import draw
+import events
+
+def coords2buf(coords,buf):
+    buf[0].put(coords[0][0][0])
+    buf[1].put(coords[0][0][1])
+    buf[2].put(coords[1][0][0])
+    buf[3].put(coords[1][0][1])
 
 class mainThread(threading.Thread):
     
@@ -18,6 +28,10 @@ class mainThread(threading.Thread):
         width=infoObject.current_w
         height=infoObject.current_h
         screen=pygame.display.set_mode((width/2,height/2))
+        myfont=pygame.font.SysFont("monospace",30)
+#         buf=[mini.miniQueue(10) for i in range(4)]
+        bufDepth=mini.miniQueue(10)
+
         
         kill=glob.kill
         
@@ -25,23 +39,45 @@ class mainThread(threading.Thread):
         while kill==False:
             coords=glob.coords
             
-            screen.fill((0,0,0))
-            pygame.draw.circle(screen, (255,0,0), (int(coords[0][0][0])/3,int(coords[0][0][1])/3),10)
-            pygame.draw.circle(screen, (0,255,0), (int(coords[1][0][0])/3,int(coords[1][0][1])/3),10)
             
-            pygame.display.update()
-            msElapsed=clock.tick(glob.frameRate)
+            screen.fill((0,0,0))
+            draw.circles(screen,coords)
+            
+            
+            dep=dp.depthEstimate(coords)
+            
+            
+            mess='Depth = %.4f'%(dep)
+            draw.text(screen,mess,myfont,10,80)
+            
+            bufDepth.put(dep)
+            mess='averaged depth = %.4f'%(bufDepth.mean())
+            draw.text(screen,mess,myfont,10,100)
+            
+            
+            
             
             if kill==True:
                 pygame.quit()
                 sys.exit()
                 break
             
-            for event in pygame.event.get(): 
-                if (event.type == QUIT) or (event.type == KEYDOWN and event.key == K_ESCAPE):
-                    pygame.quit()
-                    sys.exit()
-                    break
+            events.keyboardEvents(pygame.event.get(),screen,myfont)
+            
+#             eventsObject=pygame.event.get()
+#             for event in eventsObject:
+#                 if event.type == KEYDOWN:
+#                     if event.key == pygame.K_s:
+#                         draw.text(screen,'s pressed',myfont,10,120)
+#                         print('s pressed')
+#                 if event.type == QUIT or event.type == KEYDOWN and event.key == K_ESCAPE:
+#                     pygame.quit()
+#                     sys.exit()
+                    
+            pygame.display.update()
+            msElapsed=clock.tick(glob.frameRate)
+            
+
 
 
 
