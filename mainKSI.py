@@ -22,13 +22,10 @@ class mainThread(threading.Thread):
         threading.Thread.__init__(self)
         
     def run(self):
-        pygame.init()
+#         pygame.init()
         clock=pygame.time.Clock()
-        infoObject = pygame.display.Info()
-        width=infoObject.current_w
-        height=infoObject.current_h
-        screen=pygame.display.set_mode((width/2,height/2))
-        myfont=pygame.font.SysFont("monospace",30)
+        screen=glob.screen
+        myfont=glob.myfont
 #         buf=[mini.miniQueue(10) for i in range(4)]
         bufDepth=mini.miniQueue(10)
 
@@ -43,10 +40,10 @@ class mainThread(threading.Thread):
             screen.fill((0,0,0))
             draw.circles(screen,coords)
             
+            events.estimates(coords)
             
             dep=dp.depthEstimate(coords)
-            
-            
+                        
             mess='Depth = %.4f'%(dep)
             draw.text(screen,mess,myfont,10,80)
             
