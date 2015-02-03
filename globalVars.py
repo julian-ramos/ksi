@@ -11,6 +11,11 @@ coords[1]=[[0,0] for i in range(4)]
 kill=False
 planeCapture=False
 planeDone=False
+keybpCapture=False
+keybpDone=False
+touchEstimate=False
+
+
 #Drawing variables
 frameRate=100
 pygame.init()
@@ -23,3 +28,10 @@ screen=pygame.display.set_mode((width/2,height/2))
 
 #Buffers
 planeList=[]
+
+#Depth variables
+betas=[]
+keybpData=[]
+
+#Signal processing Variables 
+wlen=21

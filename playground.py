@@ -1,41 +1,29 @@
 import numpy as np
-import matplotlib.pyplot as plt
+import cv2
 
-x=[2.5,0.5,2.2,1.9,3.1,2.3,2  ,1  ,1.5,1.1]
-y=[2.4,0.7,2.9,2.2,3.0,2.7,1.6,1.1,1.6,0.9]
+cap = cv2.VideoCapture(0)
 
+# Define the codec and create VideoWriter object
 
-def pcaTrans(X,graph=False):
-    means=np.mean(X,0)
-    cX=X-means
-    cov=np.cov(cX.T)
-    eigva,eigve=np.linalg.eig(cov)
-    
-    print cov
-    print(eigve)
-    print(eigva)
-    print(X.shape)
-    
-    idx = eigva.argsort()
+fourcc =cv2.cv.CV_FOURCC(*'XVID')
+# fourcc = cv2.VideoWriter_fourcc(*'XVID')
+out = cv2.VideoWriter('output.avi',fourcc, 20.0, (640,480))
 
-    eigva=eigva[idx]
-    eigve=eigve[:,idx]
-    
-    print(eigve)
-    nX=np.dot(eigve.T,cX.T)
-    nX=nX.T+means
-    print('\n',nX)
-    
-    if graph:
-        plt.plot(x,y,'x')
-#         print(nX)
-        plt.plot(nX[:,0],nX[:,1],'rx')
-        plt.show()
-        
+while(cap.isOpened()):
+    ret, frame = cap.read()
+    if ret==True:
+        frame = cv2.flip(frame,0)
 
-X=np.vstack((x,y)).T
-pcaTrans(X,graph=True)
+        # write the flipped frame
+        out.write(frame)
 
-# a=[1,2,3,4]
-# a=np.array(a)
-# print(a.argsort())
+        cv2.imshow('frame',frame)
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
+    else:
+        break
+
+# Release everything if job is finished
+cap.release()
+out.release()
+cv2.destroyAllWindows()
