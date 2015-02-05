@@ -66,18 +66,48 @@ class mainThread(threading.Thread):
             #depth all in real time
             if x1.size()>wlen-1 and glob.touchEstimate:
                 sx1,sx2,sy1,sy2,sdepth=dp.liveSmoothing(x1,x2,y1,y2,wlen)
+                bsx1,bsx2,bsy1,bsy2,bsdepth=dp.liveSmoothing(x1.bootstrap(),x2.bootstrap(),y1.bootstrap(),y2.bootstrap(),wlen,miniQ=False)
+                
+                
+                glob.sx1=sx1
+                glob.sx2=sx2
+                glob.sy1=sy1
+                glob.sy2=sy2
+                glob.sdepth=sdepth
+                
+                glob.bsx1=bsx1
+                glob.bsx2=bsx2
+                glob.bsy1=bsy1
+                glob.bsy2=bsy2
+                glob.bsdepth=bsdepth
+                
+                
 #                 print(sx1,'sx1')
-                mess='smoothed depth = %.4f'%(sdepth)
+
+                depthK=dp.keybTouch(sx1,sy1,sdepth)
+                mess='smoothed depth = %.4f - expected %.4f'%(sdepth,depthK)
                 draw.text(screen,mess,myfont,10,120)
                 
-                depthK=dp.keybTouch(sx1,sy1,sdepth)
-                mess='expected depth = %.4f'%(depthK)
+                
+#                 mess='expected depth = %.4f'%(depthK)
+#                 draw.text(screen,mess,myfont,10,140)
+                
+                mess='bootS depth = %.4f - expected %.4f'%(bsdepth,depthK)
                 draw.text(screen,mess,myfont,10,140)
                 
-                if np.abs(depthK-sdepth)< 0.5:
-                     mess='Touching = %.4f'%(depthK)
-                     draw.text(screen,mess,myfont,10,160)
-            
+                if depthK-sdepth< 0.5:
+                    mess='Touching <from smoothed>= %.4f'%(depthK)
+                    draw.text(screen,mess,myfont,10,160)
+                    glob.touchS=True
+                else:
+                    glob.touchS=False
+                    
+                if depthK-bsdepth< 0.5:
+                    mess='Touching <from bootS>= %.4f'%(depthK)
+                    draw.text(screen,mess,myfont,10,180)
+                    glob.touchB=True
+                else:
+                    glob.touchB=False   
             
             if kill==True:
                 pygame.quit()
