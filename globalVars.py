@@ -1,6 +1,14 @@
 import miniQueue as mini
 import pygame
+from pymouse import PyMouse
 
+#Mouse stuff
+mouse = PyMouse()
+
+
+#Control variables
+bootstrap=False
+smoothing=True
 
 #Wii variables
 coords=[[],[]]
@@ -15,6 +23,10 @@ keybpCapture=False
 keybpDone=False
 touchEstimate=False
 signalsRec=False
+relative=False
+absolute=False
+
+
 #Touch signal from the smoothing
 touchS=False
 #Touch signal from the bootstrap
@@ -58,3 +70,7 @@ wlen=11
 #bootstrap
 #Number of boot strap samples
 bootsNum=50
+
+print('bootstrap',bootstrap)
+print('smothing',smoothing)
+print('wlen',wlen)

@@ -1,3 +1,4 @@
+import mouse
 import numpy as np
 import miniQueue as mini
 import depth as dp
@@ -23,13 +24,10 @@ class mainThread(threading.Thread):
         threading.Thread.__init__(self)
         
     def run(self):
-#         pygame.init()
         clock=pygame.time.Clock()
         screen=glob.screen
         myfont=glob.myfont
         wlen=glob.wlen
-#         buf=[mini.miniQueue(10) for i in range(4)]
-
         bufDepth=mini.miniQueue(wlen)
         x1=mini.miniQueue(wlen)
         x2=mini.miniQueue(wlen)
@@ -62,52 +60,64 @@ class mainThread(threading.Thread):
             mess='averaged depth = %.4f'%(depthA)
             draw.text(screen,mess,myfont,10,100)
             
+            draw.text(screen,'x1 -y1 %.2f - %.2f'%(x1.mean(),y1.mean()),myfont,glob.width/2-200,20)
+            draw.text(screen,'x2 -y2 %.2f - %.2f'%(x2.mean(),y2.mean()),myfont,glob.width/2-200,40)
+
             #Need to calculate x1 and y1 smoothed and then from that calculate
             #depth all in real time
             if x1.size()>wlen-1 and glob.touchEstimate:
-                sx1,sx2,sy1,sy2,sdepth=dp.liveSmoothing(x1,x2,y1,y2,wlen)
-                bsx1,bsx2,bsy1,bsy2,bsdepth=dp.liveSmoothing(x1.bootstrap(),x2.bootstrap(),y1.bootstrap(),y2.bootstrap(),wlen,miniQ=False)
-                
-                
-                glob.sx1=sx1
-                glob.sx2=sx2
-                glob.sy1=sy1
-                glob.sy2=sy2
-                glob.sdepth=sdepth
-                
-                glob.bsx1=bsx1
-                glob.bsx2=bsx2
-                glob.bsy1=bsy1
-                glob.bsy2=bsy2
-                glob.bsdepth=bsdepth
-                
-                
-#                 print(sx1,'sx1')
-
-                depthK=dp.keybTouch(sx1,sy1,sdepth)
-                mess='smoothed depth = %.4f - expected %.4f'%(sdepth,depthK)
-                draw.text(screen,mess,myfont,10,120)
-                
-                
-#                 mess='expected depth = %.4f'%(depthK)
-#                 draw.text(screen,mess,myfont,10,140)
-                
-                mess='bootS depth = %.4f - expected %.4f'%(bsdepth,depthK)
-                draw.text(screen,mess,myfont,10,140)
-                
-                if depthK-sdepth< 0.5:
-                    mess='Touching <from smoothed>= %.4f'%(depthK)
-                    draw.text(screen,mess,myfont,10,160)
-                    glob.touchS=True
-                else:
-                    glob.touchS=False
+                #Smoothing
+                if glob.smoothing:
+                    sx1,sx2,sy1,sy2,sdepth=dp.liveSmoothing(x1,x2,y1,y2,wlen)
+                    glob.sx1=sx1
+                    glob.sx2=sx2
+                    glob.sy1=sy1
+                    glob.sy2=sy2
+                    glob.sdepth=sdepth
                     
-                if depthK-bsdepth< 0.5:
-                    mess='Touching <from bootS>= %.4f'%(depthK)
-                    draw.text(screen,mess,myfont,10,180)
-                    glob.touchB=True
-                else:
-                    glob.touchB=False   
+                    depthK=dp.keybTouch(sx1,sy1,sdepth)
+                    mess='smoothed depth = %.4f - expected %.4f'%(sdepth,depthK)
+                    draw.text(screen,mess,myfont,10,120)
+                    
+                    if depthK-sdepth< 0.2:
+                        mess='Touching <from smoothed>= %.4f'%(depthK-sdepth)
+                        draw.text(screen,mess,myfont,10,160)
+                        glob.touchS=True
+                    else:
+                        glob.touchS=False                
+                
+                #Bootstrap
+                if glob.bootstrap:
+                    bsx1,bsx2,bsy1,bsy2,bsdepth=dp.liveSmoothing(x1.bootstrap(),x2.bootstrap(),y1.bootstrap(),y2.bootstrap(),wlen,miniQ=False)
+                    glob.bsx1=bsx1
+                    glob.bsx2=bsx2
+                    glob.bsy1=bsy1
+                    glob.bsy2=bsy2
+                    glob.bsdepth=bsdepth
+    
+                    
+                    depthK=dp.keybTouch(bsx1,bsy1,bsdepth)
+                    mess='bootS depth = %.4f - expected %.4f'%(bsdepth,depthK)
+                    draw.text(screen,mess,myfont,10,140)
+                    
+                    if depthK-bsdepth< 0.2:
+                        mess='Touching <from bootS>= %.4f'%(depthK-bsdepth)
+                        draw.text(screen,mess,myfont,10,180)
+                        glob.touchB=True
+                    else:
+                        glob.touchB=False
+                        
+                #Mouse events
+                mouse.move(sx1,sy1)
+                
+                #Notes to self
+                #First scale to screen
+                #Implement absolute
+                #Implement relative
+                
+                
+                    
+                   
             
             if kill==True:
                 pygame.quit()
