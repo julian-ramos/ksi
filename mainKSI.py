@@ -33,6 +33,8 @@ class mainThread(threading.Thread):
         x2=mini.miniQueue(wlen)
         y1=mini.miniQueue(wlen)
         y2=mini.miniQueue(wlen)
+        mx=mini.miniQueue(2)
+        my=mini.miniQueue(2)
         
         kill=glob.kill
         
@@ -107,8 +109,12 @@ class mainThread(threading.Thread):
                     else:
                         glob.touchB=False
                         
+                mx.put(sx1)
+                my.put(sy1)
+                        
                 #Mouse events
-                mouse.move(sx1,sy1)
+                if mx.size()==2:
+                    mouse.move(mx,my,glob.touchS)
                 
                 #Notes to self
                 #First scale to screen
