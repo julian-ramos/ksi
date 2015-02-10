@@ -64,7 +64,13 @@ class mainThread(threading.Thread):
             
             draw.text(screen,'x1 -y1 %.2f - %.2f'%(x1.mean(),y1.mean()),myfont,glob.width/2-200,20)
             draw.text(screen,'x2 -y2 %.2f - %.2f'%(x2.mean(),y2.mean()),myfont,glob.width/2-200,40)
-
+            if glob.absolute:
+                draw.text(screen,'Absolute mode',myfont,glob.width/2-200,60)
+            elif glob.relative:
+                draw.text(screen,'Relative mode',myfont,glob.width/2-200,60)
+            if glob.absolute or glob.relative:
+                draw.text(screen,'Delta %d'%(glob.delta),myfont,glob.width/2-200,80)
+                draw.text(screen,'Touch thold %.2f'%(glob.touchRange),myfont,glob.width/2-200,100)
             #Need to calculate x1 and y1 smoothed and then from that calculate
             #depth all in real time
             if x1.size()>wlen-1 and glob.touchEstimate:
@@ -78,10 +84,10 @@ class mainThread(threading.Thread):
                     glob.sdepth=sdepth
                     
                     depthK=dp.keybTouch(sx1,sy1,sdepth)
-                    mess='smoothed depth = %.4f - expected %.4f'%(sdepth,depthK)
+                    mess='smoothed depth = %.4f - delta %.4f'%(sdepth,depthK-sdepth)
                     draw.text(screen,mess,myfont,10,120)
                     
-                    if depthK-sdepth< 0.2:
+                    if depthK-sdepth< glob.touchRange:
                         mess='Touching <from smoothed>= %.4f'%(depthK-sdepth)
                         draw.text(screen,mess,myfont,10,160)
                         glob.touchS=True
@@ -116,15 +122,6 @@ class mainThread(threading.Thread):
                 if mx.size()==2:
                     mouse.move(mx,my,glob.touchS)
                 
-                #Notes to self
-                #First scale to screen
-                #Implement absolute
-                #Implement relative
-                
-                
-                    
-                   
-            
             if kill==True:
                 pygame.quit()
                 sys.exit()

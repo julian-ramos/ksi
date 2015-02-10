@@ -4,6 +4,15 @@ from pymouse import PyMouse
 
 #Mouse stuff
 mouse = PyMouse()
+topX=1000
+botX=500
+# topX=930
+# botX=450
+topY=330
+botY=630
+delta=0
+deltaToggle=False
+touchthToggle=False
 
 
 #Control variables
@@ -25,7 +34,8 @@ touchEstimate=False
 signalsRec=False
 relative=False
 absolute=False
-
+keystatus=[False,False,False]
+fingersOn=False
 
 #Touch signal from the smoothing
 touchS=False
@@ -62,10 +72,11 @@ bsdepth=0
 #Depth variables
 betas=[]
 keybpData=[]
+touchRange=0.15
 
 #Signal processing Variables 
 #Window length
-wlen=11
+wlen=10
 
 #bootstrap
 #Number of boot strap samples
@@ -74,3 +85,4 @@ bootsNum=50
 print('bootstrap',bootstrap)
 print('smothing',smoothing)
 print('wlen',wlen)
+print('touch Thold',touchRange)

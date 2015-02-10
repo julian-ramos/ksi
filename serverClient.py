@@ -5,6 +5,57 @@ import sys
 import threading
 import globalVars as glob
 
+
+def messageKeyboard(messageData):
+    start=messageData.find('{')+1
+    
+    end=messageData.find('}')-1
+    
+    keyS=messageData.find(',')+1
+    keyE=start-1
+    key=messageData[keyS:keyE]
+    
+#     print('key'+messageData[keyS:keyE])
+#     print('other'+messageData[start:end])
+    
+    other=messageData[start:end]
+    ind=other.find('la')
+    other=other.split(',')
+    
+    tempI=other[2].find(':')
+    
+    alt=other[2][tempI:tempI+3]
+    
+    if alt.find('T')>=0:
+        alt=True
+    else:
+        alt=False
+
+    if key.find('tab')>=0:
+        tab=True
+    else:
+        tab=False
+        
+    
+    if key.find('space')>=0:
+        space=True
+    else:
+        space=False
+    
+#     print(alt,tab,space)
+    return [alt,tab,space]
+    
+    #TODO
+    #Implement the way to capture left alt, tab and space
+    #While alt+ tab sounds like a great idea it is not
+    #it requires the sychronizaiton of both hands
+    #it should be either alt or tab
+    #implement this as events I can tell to mainKSI how to interpret
+    #meaning mode 4 could be alt is toggle
+    # mode 5 tab is toggle
+    
+    
+
 def messageDecypher(messageData):
         mess=messageData.split(',')
         for i in range(len(mess)):
@@ -66,6 +117,9 @@ class Client(threading.Thread):
     #                         vals.mouse_flg = not vals.mouse_flg
                     elif data.find('wii')>=0:
                         self.wiiID,self.data=messageDecypher(data)
+                    elif data.find('key')>=0:
+#                         print('got keylog')
+                        glob.keystatus=messageKeyboard(data)
                 except:
                     print "User quit."
                     return
