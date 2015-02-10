@@ -6,44 +6,7 @@ import threading
 import globalVars as glob
 
 
-def messageKeyboard(messageData):
-    start=messageData.find('{')+1
-    
-    end=messageData.find('}')-1
-    
-    keyS=messageData.find(',')+1
-    keyE=start-1
-    key=messageData[keyS:keyE]
-    
-#     print('key'+messageData[keyS:keyE])
-#     print('other'+messageData[start:end])
-    
-    other=messageData[start:end]
-    ind=other.find('la')
-    other=other.split(',')
-    
-    tempI=other[2].find(':')
-    
-    alt=other[2][tempI:tempI+3]
-    
-    if alt.find('T')>=0:
-        alt=True
-    else:
-        alt=False
 
-    if key.find('tab')>=0:
-        tab=True
-    else:
-        tab=False
-        
-    
-    if key.find('space')>=0:
-        space=True
-    else:
-        space=False
-    
-#     print(alt,tab,space)
-    return [alt,tab,space]
     
     #TODO
     #Implement the way to capture left alt, tab and space
@@ -101,28 +64,29 @@ class Client(threading.Thread):
             data = self.client.recv(self.size)                
             if data:
 #                 print(data)
-                try:
-                    if data.find('mflt')>=0:
-                        print('got something from the mflt client')
-                        print(data)
-                        #The next section sends the mouse state
-                        #for now I just inhabilitated it
-    #                         self.client.send(str(vals.mouse_flg))
-    #                         print(vals.mouse_flg)
-                    elif data.find('click')>=0:
-                        print "click cliked"
-    #                         vals.newClick_flg = 1 
-                    elif data.find('switch')>=0:
-                        print "switch switched"
-    #                         vals.mouse_flg = not vals.mouse_flg
-                    elif data.find('wii')>=0:
-                        self.wiiID,self.data=messageDecypher(data)
-                    elif data.find('key')>=0:
+#                 try:
+                if data.find('mflt')>=0:
+                    print('got something from the mflt client')
+                    print(data)
+                    #The next section sends the mouse state
+                    #for now I just inhabilitated it
+#                         self.client.send(str(vals.mouse_flg))
+#                         print(vals.mouse_flg)
+                elif data.find('click')>=0:
+                    print "click cliked"
+#                         vals.newClick_flg = 1 
+                elif data.find('switch')>=0:
+                    print "switch switched"
+#                         vals.mouse_flg = not vals.mouse_flg
+                elif data.find('wii')>=0:
+                    self.wiiID,self.data=messageDecypher(data)
+                elif data.find('key')>=0:
 #                         print('got keylog')
-                        glob.keystatus=messageKeyboard(data)
-                except:
-                    print "User quit."
-                    return
+                    print(data)
+#                     glob.keystatus=messageKeyboard(data)
+#                 except:
+#                 print "User quit."
+#                 return
                 
                 
                 if data.find('wii')>=0:

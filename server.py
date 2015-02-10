@@ -10,7 +10,7 @@ class Server:
     def __init__(self):
         print('Starting server')
         self.host = ''
-        self.port = 50001
+        self.port = 50010
         self.backlog = 10
         self.size = 2048
         self.server = None

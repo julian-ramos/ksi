@@ -19,7 +19,7 @@ import sys
 
 
 host = 'localhost'
-port = 50001
+port = 50010
 size = 2048
 socketCon=False
 # s.send('identity wiiMote1')

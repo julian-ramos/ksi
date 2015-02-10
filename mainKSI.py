@@ -1,3 +1,4 @@
+import math
 import mouse
 import numpy as np
 import miniQueue as mini
@@ -115,8 +116,8 @@ class mainThread(threading.Thread):
                     else:
                         glob.touchB=False
                         
-                mx.put(sx1)
-                my.put(sy1)
+                mx.put(math.floor(sx1))
+                my.put(math.floor(sy1))
                         
                 #Mouse events
                 if mx.size()==2:

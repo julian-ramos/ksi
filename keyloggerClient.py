@@ -11,7 +11,7 @@ from ctypes.util import find_library
 import socket
 
 host = 'localhost'
-port = 50001
+port = 50010
 size = 2048
 
 
@@ -128,7 +128,44 @@ key_mapping = {
 }
 
 
+def messageKeyboard(messageData):
+    start=messageData.find('{')+1
+    
+    end=messageData.find('}')-1
+    
+    keyS=messageData.find(',')+1
+    keyE=start-1
+    key=messageData[keyS:keyE]
+    
+#     print('key'+messageData[keyS:keyE])
+#     print('other'+messageData[start:end])
+    
+    other=messageData[start:end]
+    ind=other.find('la')
+    other=other.split(',')
+    
+    tempI=other[2].find(':')
+    
+    alt=other[2][tempI:tempI+3]
+    
+    if alt.find('T')>=0:
+        alt=True
+    else:
+        alt=False
 
+    if key.find('tab')>=0:
+        tab=True
+    else:
+        tab=False
+        
+    
+    if key.find('space')>=0:
+        space=True
+    else:
+        space=False
+    
+#     print(alt,tab,space)
+    return [alt,tab,space]
 
 def fetch_keys_raw():
     x11.XQueryKeymap(display, keyboard)
@@ -186,24 +223,27 @@ def fetch_keys():
 
 
 
-def log(done,sleep_interval=.00001):
+def log(done,sleep_interval=.01):
     socketCon=False
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     while not done():
-        sleep(sleep_interval)
+        while socketCon==False:
+            print('attempting to connect')
+            
+            e=s.connect_ex((host,port))
+            
+            if e==0:
+                socketCon=True
+        
+#         sleep(sleep_interval)
         changed, modifiers, keys = fetch_keys()
         if changed:
             mess2send='key,%r %r'%(keys,modifiers)
             print(mess2send)
-            if socketCon==False:
-                try:
-                    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                    s.connect((host,port))
-                except:
-                    s=None
-                if not s==None:
-                    socketCon=True
-            else:
-                s.send(mess2send)
+            
+            data=messageKeyboard(mess2send)
+            mess='key : '+str(data)
+            s.send(mess)
     s.close()
 
 
@@ -211,7 +251,8 @@ def log(done,sleep_interval=.00001):
 if __name__=='__main__':
     now = time()
     done = lambda: time() > now + 60
-    log(done)
+    while True:
+        log(done)
 
 
 
