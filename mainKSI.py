@@ -1,3 +1,4 @@
+import os
 import math
 import mouse
 import numpy as np
@@ -25,6 +26,7 @@ class mainThread(threading.Thread):
         threading.Thread.__init__(self)
         
     def run(self):
+        os.nice(1)
         clock=pygame.time.Clock()
         screen=glob.screen
         myfont=glob.myfont
@@ -72,8 +74,12 @@ class mainThread(threading.Thread):
             if glob.absolute or glob.relative:
                 draw.text(screen,'Delta %d'%(glob.delta),myfont,glob.width/2-200,80)
                 draw.text(screen,'Touch thold %.2f'%(glob.touchRange),myfont,glob.width/2-200,100)
-            #Need to calculate x1 and y1 smoothed and then from that calculate
-            #depth all in real time
+            
+            if glob.fingersOn:
+                draw.text(screen,'Fingers ON',myfont,glob.width/2-200,220)
+            else:
+                draw.text(screen,'Fingers OFF',myfont,glob.width/2-200,220)
+            
             if x1.size()>wlen-1 and glob.touchEstimate:
                 #Smoothing
                 if glob.smoothing:
@@ -116,11 +122,11 @@ class mainThread(threading.Thread):
                     else:
                         glob.touchB=False
                         
-                mx.put(math.floor(sx1))
-                my.put(math.floor(sy1))
+                mx.put(np.floor(sx1))
+                my.put(np.floor(sy1))
                         
                 #Mouse events
-                if mx.size()==2:
+                if mx.size()>=2:
                     mouse.move(mx,my,glob.touchS)
                 
             if kill==True:
@@ -145,6 +151,8 @@ class mainThread(threading.Thread):
             
 
 
+
+#Increasing the priority of the process
 
 
 subprocess.call("/home/julian/git/ksi/runner.sh",shell=True)
