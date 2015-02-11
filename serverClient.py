@@ -96,7 +96,7 @@ class Client(threading.Thread):
 #         vals.wiimoteNum = vals.wiimoteNum + 1
 
     def run(self):
-        os.nice(1000)
+        
         running = 1
         while running:
             data = self.client.recv(self.size)                
@@ -120,7 +120,7 @@ class Client(threading.Thread):
                     self.wiiID,self.data=messageDecypher(data)
                 elif data.find('key')>=0:
 #                         print('got keylog')
-                    print(data)
+#                     print(data)
                     glob.keystatus=messageKeyboard(data)
 #                 except:
 #                 print "User quit."

