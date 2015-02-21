@@ -33,7 +33,7 @@ wiiMAC=[]
 # wiiMACFile = 'wiiMAC.data'
 
 #Office motes
-wiiMACFile = 'wiiMAC.data'
+wiiMACFile = 'wiiMAC2.data'
 wiiNum = 0
 try:
     wiiNum = int(sys.argv[1])

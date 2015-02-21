@@ -4,15 +4,17 @@ from pymouse import PyMouse
 
 #Mouse stuff
 mouse = PyMouse()
-topX=1000
-botX=500
+topX=950
+botX=570
 # topX=930
 # botX=450
-topY=450
-botY=750
+topY=230
+botY=630
 delta=0
 deltaToggle=False
 touchthToggle=False
+rxScale=0.5
+ryScale=0.8
 
 
 #Control variables

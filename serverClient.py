@@ -108,8 +108,8 @@ class Client(threading.Thread):
                     print(data)
                     #The next section sends the mouse state
                     #for now I just inhabilitated it
-#                         self.client.send(str(vals.mouse_flg))
-#                         print(vals.mouse_flg)
+                    self.client.send(str(glob.fingersOn))
+                    print(glob.fingersOn)
                 elif data.find('click')>=0:
                     print "click cliked"
 #                         vals.newClick_flg = 1 

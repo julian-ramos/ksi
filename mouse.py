@@ -14,10 +14,11 @@ def move(x,y,touchS):
     y=y.allData()[1]
     
     if px<=topX and px>=botX and py>=topY and py<=botY and gV.fingersOn:
+#         print('inrange')
         
         if gV.relative and touchS:
-            x,y=scale(x,y)
-            px,py=scale(px,py)
+            x,y=scale(x,y,sx=gV.rxScale,sy=gV.ryScale)
+            px,py=scale(px,py,sx=gV.rxScale,sy=gV.ryScale)
             dx=x-px
             dy=y-py
             cx,cy=gV.mouse.position()
@@ -36,7 +37,7 @@ def move(x,y,touchS):
             print('click')
             gV.keystatus[2]=False
 
-def scale(x,y):
-    x= gV.width*(-x+topX)/(topX-botX)
-    y= gV.height*(y-topY)/(botY-topY)
+def scale(x,y,sx=1.0,sy=1.0):
+    x= sx*gV.width*(-x+topX)/(topX-botX)
+    y= sy*gV.height*(y-topY)/(botY-topY)
     return x,y
