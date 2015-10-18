@@ -9,14 +9,14 @@ import depth as dp
 
 def keyboardEvents(eventsObject,screen,myfont):
     
-    if gV.keystatus[0] and gV.fingersOn:
+    if gV.keystatus[gV.toggleKey] and gV.fingersOn:
         gV.fingersOn=False
-        gV.keystatus[0]=False
+        gV.keystatus[gV.toggleKey]=False
         print('fingers go off')
     
-    elif gV.keystatus[0] and gV.fingersOn==False:
+    elif gV.keystatus[gV.toggleKey] and gV.fingersOn==False:
         gV.fingersOn=True
-        gV.keystatus[0]=False
+        gV.keystatus[gV.toggleKey]=False
         print('fingers go on')
     
     

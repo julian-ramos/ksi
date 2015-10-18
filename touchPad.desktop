@@ -1,0 +1,9 @@
+   [Desktop Entry]
+Type=Application
+Name=noAccel
+Comment=Eclipse Integrated Development Environment
+Icon=eclipse
+Exec=/home/git/julian/ksi/noAccel.sh
+Terminal=true
+Categories=Program;
+

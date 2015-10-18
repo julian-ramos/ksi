@@ -4,12 +4,22 @@ from pymouse import PyMouse
 
 #Mouse stuff
 mouse = PyMouse()
+#Used on the 1st study
+#topX=950
+#botX=570
+#Used on 2nd study
 topX=950
-botX=570
-# topX=930
-# botX=450
-topY=230
+botX=380
+
+#Used on 1st study
+#topY=330
+#botY=630
+#Used on 2nd Study
+topY=330
 botY=630
+
+
+
 delta=0
 deltaToggle=False
 touchthToggle=False
@@ -78,13 +88,23 @@ touchRange=0.15
 
 #Signal processing Variables 
 #Window length
-wlen=10
+wlen=15
 
 #bootstrap
 #Number of boot strap samples
 bootsNum=50
 
+#keyboard events variables
+#alt
+#toggleKey=0
+#tab
+toggleKey=1
+
 print('bootstrap',bootstrap)
 print('smothing',smoothing)
 print('wlen',wlen)
 print('touch Thold',touchRange)
+
+
+
+#

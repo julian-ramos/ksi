@@ -125,8 +125,7 @@ class mainThread(threading.Thread):
                 my.put(np.floor(sy1))
                         
                 #Mouse events
-                if mx.size()>=2:
-                    
+                if mx.size()>=2:                
                     mouse.move(mx,my,glob.touchS)
                 
             if kill==True:
@@ -152,7 +151,7 @@ class mainThread(threading.Thread):
 
 
 
-#Increasing the priority of the process
+
 
 subprocess.call("/home/julian/git/ksi/accelDisable.sh",shell=True)
 subprocess.call("/home/julian/git/ksi/runner.sh",shell=True)
