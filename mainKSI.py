@@ -14,6 +14,12 @@ import threading
 import draw
 import events
 
+'''
+TODO:
+
+Rescaling problem check also how to maybe run the fitts law test? for the demo
+'''
+
 def coords2buf(coords,buf):
     buf[0].put(coords[0][0][0])
     buf[1].put(coords[0][0][1])
@@ -78,8 +84,11 @@ class mainThread(threading.Thread):
                 draw.text(screen,'Fingers ON',myfont,glob.width/2-200,220)
             else:
                 draw.text(screen,'Fingers OFF',myfont,glob.width/2-200,220)
-            
+#             Compatibility: PyPy is highly compatible with existing python code. It supports cffi and can run popular python libraries like twisted and django.
+
             if x1.size()>wlen-1 and glob.touchEstimate:
+                mess='Inside loop'
+                draw.text(screen,mess,myfont,10,260)
                 #Smoothing
                 if glob.smoothing:
                     sx1,sx2,sy1,sy2,sdepth=dp.liveSmoothing(x1,x2,y1,y2,wlen)
@@ -153,8 +162,8 @@ class mainThread(threading.Thread):
 
 
 
-subprocess.call("/home/julian/git/ksi/accelDisable.sh",shell=True)
-subprocess.call("/home/julian/git/ksi/runner.sh",shell=True)
+subprocess.call("~/git/ksi/accelDisable.sh",shell=True)
+subprocess.call("~/git/ksi/runner.sh",shell=True)
 
 a=mainThread()
 a.start()

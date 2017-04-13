@@ -8,16 +8,23 @@ mouse = PyMouse()
 #topX=950
 #botX=570
 #Used on 2nd study
-topX=950
-botX=380
+# topX=950
+# botX=380
+
+#Last version
+topX=300
+botX=34
 
 #Used on 1st study
 #topY=330
 #botY=630
 #Used on 2nd Study
-topY=330
-botY=630
+# topY=330
+# botY=630
 
+#Last version
+topY=250
+botY=400
 
 
 delta=0
@@ -60,7 +67,7 @@ pygame.init()
 infoObject = pygame.display.Info()
 width=infoObject.current_w
 height=infoObject.current_h
-myfont=pygame.font.SysFont("monospace",30)
+myfont=pygame.font.SysFont("monospace",14)
 screen=pygame.display.set_mode((width/2,height/2))
 
 

